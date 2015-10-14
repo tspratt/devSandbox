@@ -1,0 +1,21 @@
+{
+  "name": "uatest",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node_modules/.bin/mocha"
+  },
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "express": "~4.13.1",
+    "handlebars": "^3.0.3",
+    "request": "^2.63.0",
+    "soap": "^0.9.3",
+    "winston": "1.0.x",
+    "xml2js": "^0.4.8"
+  },
+  "devDependencies": {
+    "mocha": "1.9.x",
+    "chai": "3.2.x"
+  }
+}

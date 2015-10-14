@@ -1,0 +1,38 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://fedex.com/ws/addressvalidation/v2">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <v2:AddressValidationRequest>
+      <v2:WebAuthenticationDetail>
+        <v2:UserCredential>
+          <v2:Key>{{key}}</v2:Key>
+          <v2:Password>{{password}}</v2:Password>
+        </v2:UserCredential>
+      </v2:WebAuthenticationDetail>
+      <v2:ClientDetail>
+        <v2:AccountNumber>{{accountNumber}}</v2:AccountNumber>
+        <v2:MeterNumber>{{meterNumber}}</v2:MeterNumber>
+      </v2:ClientDetail>
+      <v2:Version>
+        <v2:ServiceId>aval</v2:ServiceId>
+        <v2:Major>2</v2:Major>
+        <v2:Intermediate>0</v2:Intermediate>
+        <v2:Minor>0</v2:Minor>
+      </v2:Version>
+      <v2:RequestTimestamp>{{timestamp}}</v2:RequestTimestamp>
+      <v2:Options>
+        {{optionXml}}
+      </v2:Options>
+      <v2:AddressesToValidate>
+        <v2:Address>
+          {{#each addressLines}}
+            <v2:StreetLines><![CDATA[{{this}}]]></v2:StreetLines>
+          {{/each}}
+          <v2:City><![CDATA[{{city}}]]></v2:City>
+          <v2:StateOrProvinceCode><![CDATA[{{state}}]]></v2:StateOrProvinceCode>
+          <v2:PostalCode><![CDATA[{{postal}}]]></v2:PostalCode>
+          <v2:CountryCode><![CDATA[{{country}}]]></v2:CountryCode>
+        </v2:Address>
+      </v2:AddressesToValidate>
+    </v2:AddressValidationRequest>
+  </soapenv:Body>
+</soapenv:Envelope>
