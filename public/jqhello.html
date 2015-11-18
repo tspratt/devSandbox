@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jqHello</title>
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+</head>
+<body>
+<style>
+	html {
+		box-sizing: border-box;
+	}
+	.good-bye {
+		color: red;
+		font-weight: bold;
+	}
+</style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#mySpan').html('Hello World!');
+		$('.myClass').click(function(event){
+			var $e = $(this);
+			var $mySpan = $('#mySpan');
+			var someData = $e.data('my').toString();
+			console.log('some attribute data:', someData);
+			if ($e.html() === 'Hello') {
+				$e.html('Goodbye');
+				$mySpan.addClass('good-bye');
+				$mySpan.fadeOut(800);
+			}
+			else {
+				$e.html('Hello');
+				$mySpan.removeClass('good-bye');
+				$mySpan.fadeIn(200);
+			}
+			$mySpan.html($e.html() + ' World!')
+		});
+
+
+	});
+</script>
+
+<button class="myClass" data-my="some data">Hello</button>
+<span id="mySpan"></span>
+</body>
+</html>
