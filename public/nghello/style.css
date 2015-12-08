@@ -1,0 +1,28 @@
+html {
+	box-sizing: border-box;
+}
+.say {
+	font-size: 24px;
+	font-weight: bold;
+	padding: 10px;
+	display: inline-block;
+	width: 20%;
+	float: left;
+	border: solid 1px #0b97c4;
+}
+@media screen and (max-width: 648px) {
+	.say {
+		clear: both;
+		font-size: 16px;
+		font-weight: normal;
+		margin: 10px;
+		padding: 10px;
+		display: block;
+		width: 80%;
+		background-color: lightgray;
+	}
+}
+.goodbye {
+	color: red;
+	font-weight: bold;
+}

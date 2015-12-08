@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Hello World</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
+	<link rel="stylesheet" href="style.css">
+	<script src="./app.js"></script>
+</head>
+<body ng-app="hello">
+<div ng-controller="helloCtrl">
+	<button ng-click="toggleHello()"
+					ng-class="{'goodbye': !isHere}">Say {{btnLabel}}
+	</button>
+	<input type="text" ng-model="username" focus-me="true" on-enter-key="toggleHello()" >
+	<p ><span ng-class="{'goodbye': isHere}">{{sayLabel}}</span> {{username}}!</p>
+	<div>
+		<say username="username" ishere="isHere" ng-repeat="language in languages" language="{{language}}"></say>
+	</div>
+
+</div>
+
+
+</body>
+</html>

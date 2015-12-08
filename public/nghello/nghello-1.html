@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>ngHello - jsFiddle demo</title>
+
+
+	<script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.js'></script>
+
+
+	<link rel="stylesheet" type="text/css" href="/css/result-light.css">
+
+	<style type='text/css'>
+		html {
+			box-sizing: border-box;
+		}
+
+		.say {
+			font-size: 24px;
+			font-weight: bold;
+			padding: 10px;
+			display: inline-block;
+			width: 20%;
+			float: left;
+			border: solid 1px #0b97c4;
+		}
+
+		@media screen and (max-width: 648px) {
+			.say {
+				clear: both;
+				font-size: 16px;
+				font-weight: normal;
+				margin: 10px;
+				padding: 10px;
+				display: block;
+				width: 80%;
+				background-color: lightgray;
+			}
+		}
+
+		.goodbye {
+			color: red;
+			font-weight: bold;
+		}
+	</style>
+
+
+	<script type='text/javascript'>//<![CDATA[
+
+	angular
+			.module('hello', [])
+			.config(function ($httpProvider) {
+
+			})
+			.run(['$rootScope', function ($rootScope) {
+
+			}])
+			.controller('helloCtrl', ['$scope', function ($scope) {
+				$scope.username = 'World';
+				$scope.isHere = false;
+				$scope.sayLabel = 'Hello';
+				$scope.btnLabel = 'Hello';
+				$scope.languages = ['en_us', 'sp_mx', 'de_be', 'fr_pa'];
+
+				$scope.$watch('isHere', function (newVal, oldVal) {
+					$scope.sayLabel = (newVal) ? 'Goodbye' : 'Hello';
+					$scope.btnLabel = (newVal) ? 'Hello' : 'Goodbye';
+				});
+
+				$scope.toggleHello = function () {
+					$scope.isHere = !$scope.isHere;
+				}
+
+			}])
+			.directive('say', function () {
+				var ctrl = ['$scope', function ($scope) {
+					$scope.getSay = function () {
+						var say;
+						switch ($scope.language) {
+							case 'en_us':
+								say = {hello: 'Hello', goodbye: 'Goodbye'};
+								break;
+							case 'sp_mx':
+								say = {hello: 'Hola', goodbye: 'Adios'};
+								break;
+							case 'de_be':
+								say = {hello: 'Hallo', goodbye: 'Auf Wiedersehen'};
+								break;
+							case 'fr_pa':
+								say = {hello: 'Salut', goodbye: 'Au Revoir'};
+								break;
+							default:
+								say = {hello: 'Salut', goodbye: 'Au Revoir'};
+								break;
+						}
+						return (!$scope.isHere) ? say.hello : say.goodbye;
+					}
+				}];
+
+				return {
+					restrict: 'E',
+					scope: {
+						username: '=username',
+						isHere: '=ishere',
+						language: '@language'
+					},
+					template: '<span class="say"><span ng-class="{goodbye: isHere}">{{getSay()}}</span> {{username}}!</span>',
+					controller: ctrl
+				}
+			})
+			.directive('onEnterKey', function () {
+				return function (scope, element, attrs) {
+					element.bind("keydown keypress", function (event) {
+						if (event.which === 13) {
+							scope.$apply(function () {
+								scope.$eval(attrs.onEnterKey);
+							});
+
+							event.preventDefault();
+							event.stopPropagation();
+							event.stopImmediatePropagation();
+						}
+					});
+				};
+			})
+			.directive('focusMe', function () {
+				return {
+					link: function (scope, element, attrs) {
+						scope.$watch(attrs.focusMe, function (value) {
+							if (value === true) {
+								console.log('value=', value);
+								element[0].focus();
+								scope[attrs.focusMe] = false;
+							}
+						});
+					}
+				};
+			});
+	//]]>
+
+	</script>
+
+</head>
+<body ng-app="hello">
+<div ng-controller="helloCtrl">
+	<button ng-click="toggleHello()" ng-class="{'good-bye': !isHere}">Say {{btnLabel}}
+	</button>
+	<input type="text" ng-model="username" focus-me="true" on-enter-key="toggleHello()">
+
+	<p><span ng-class="{'goodbye': isHere}">{{sayLabel}}</span> {{username}}!</p>
+
+	<div>
+		<say username="username" ishere="isHere" ng-repeat="language in languages" language="{{language}}"></say>
+	</div>
+</div>
+
+
+</body>
+
+</html>
+
