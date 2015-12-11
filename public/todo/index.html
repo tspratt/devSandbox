@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ToDo</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
+	<link rel="stylesheet" href="style.css">
+	<script src="./app.js"></script>
+</head>
+<body ng-app="todo">
+<div ng-controller="todoCtrl">
+	<h3>TS-ToDo</h3>
+	<div class="header">
+		<div class="header-sec">
+			<input type="checkbox" ng-model="completeOnly">Hide Completed?
+		</div>
+		<div class="header-sec">
+			<input type="radio" ng-model="orderBy" value="date">Date Order<br>
+			<input type="radio" ng-model="orderBy" value="priority">Priority Order
+		</div>
+		<button class="header-sec" ng-click="addItem()()">Add<br>Item</button>
+	</div>
+
+	<div class="content">
+		<hr>
+		<div class="todoitem" ng-repeat="item in items">
+			<div class="itemcol" >
+				<span class="itemlabel">Description:</span><span class="itemvalue">{{item.description}}</span>
+				<br>
+				<span class="itemlabel">Priority:</span><span class="itemvalue">{{item.priority}}</span>
+				<br>
+				<span class="itemlabel">Date:</span><span class="itemvalue">{{item.date | date: 'MM-d-yyyy'}}</span>
+				<br>
+				<span class="itemlabel">Status:</span><span class="itemvalue">{{item.status}}</span>
+			</div>
+			<div class="tool-col">
+				<button ng-click="deleteItem($index)">Delete</button><br>
+				<button  ng-click="editItem($index)">Edit</button><br>
+				<!--<button  ng-click="setStatus($index, 'Complete')">COMPLETE</button>-->
+				<a href="#" ng-click="setStatus($index, 'Complete')">Set Complete</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="detail-form" ng-show="formVisible">
+		<div>
+			<button class="toolbutton" ng-click="closeForm('save')">Save</button>
+			<button class="toolbutton" ng-click="closeForm('cancel')">Cancel</button>
+		</div>
+		<div class="content">
+			<span class="detail-label">Description:</span><input class="detail-value" focus-me="true" type="text" ng-model="currentItem.description">
+			<br>
+			<span class="detail-label">Priority: </span><input class="detail-value" type="text" ng-model="currentItem.priority">
+			<br>
+			<span class="detail-label">Date: </span><input class="detail-value" type="date" ng-model="currentItem.date">
+			<br>
+			<span class="detail-label">Status: </span><br>
+			<select class="detail-value" ng-model="currentItem.status">
+				<option value="New">New</option>
+				<option value="In Process">In Process</option>
+				<option value="Complete">Complete</option>
+			</select>
+		</div>
+	</div>
+</div>
+</body>
+</html>

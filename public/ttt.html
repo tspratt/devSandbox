@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TTT</title>
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+</head>
+<body>
+<style>
+	html {
+		box-sizing: border-box;
+	}
+	.game-board {
+		width: 90vw;
+		height: 90vw;
+		max-width: 600px;
+		max-height: 600px;
+		display: inline-block;
+		padding: 5px;
+		border: solid 1px #000000;
+	}
+	.play-button {
+		display: block;
+		float: left;
+		width: 30vw;
+		height: 30vw;
+		max-width: 200px;
+		max-height: 200px;
+		font-size: 20vw;
+		font-weight: bold;
+	}
+
+	@media (min-width: 600px) {
+		.play-button {
+			font-size: 124px;
+		}
+	}
+
+	.game-win {
+		background-color: #00A000;
+	}
+
+</style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*
+		 00 | 01 | 02
+		 10 | 11 | 12
+		 20 | 21 | 22
+
+		 wins:
+		 0[0,1,2],
+		 1[0,1,2]
+		 2[0,1,2]
+
+		 cols:
+		 []0
+		 []1
+		 []2
+
+		 diag:
+		 00,11,22
+		 20,11,02
+		 */
+
+		var scores = {X: 0, O: 0};
+		var player = 'X';	//'O'
+		var gameState = {};
+		var aDiag1 = ['00','11','22'];
+		var aDiag2 = ['20','11','02'];
+		$('.play-button').click(function(event){
+			var $e = $(this);
+			var position = $e.data('position').toString();
+			console.log('button text:', $e.html());
+			if ($e.html() === '') {
+				$e.html(player);
+				gameState[position] = player;
+				checkWin(position);
+				player = (player === 'X')? 'O':'X';
+			}
+		});
+
+		$('#newGame').click(function(event){
+			newGame();
+		});
+		$('#resetGame').click(function(event){
+			newGame();
+			scores = {X: 0, O: 0};
+			$("#scoreX").html(0);
+			$("#scoreO").html(0);
+		});
+
+		function newGame () {
+			player = 'X';
+			for (var key in gameState) {
+				var $gameButton = $("button[data-position='" + key + "']");
+				$gameButton.html('');
+				$gameButton.removeClass('game-win');
+			}
+			$(".game-board").removeClass('game-win');
+			gameState = {};
+		}
+
+		function checkWin( position) {
+			var row = position.charAt(0);
+			var col = position.charAt(1);
+
+			var idxRow = 0;
+			var idxCol = 0;
+			var i = -1;
+			var win = true;
+			var winOn = '';
+			var key = '';
+			console.log('check row');
+			winOn = 'r' + row;
+			for (idxCol = 0; idxCol < 3; idxCol++) {
+				key = row + idxCol;
+				console.log('checking ', key);
+				if (gameState[key] !== player) {
+					win = false;
+					break;
+				}
+			}
+			if (!win) {
+				//check columns
+				console.log('check column');
+				win = true;
+				winOn = 'c' + col;
+				for (idxRow = 0; idxRow < 3; idxRow++) {
+					key = idxRow + col;
+					console.log('checking ', key);
+					if (gameState[key] !== player) {
+						win = false;
+						break;
+					}
+				}
+			}
+			if (!win) {
+				win = true;
+
+				//check diagonal not O1, not
+				console.log('check diag 1');
+				winOn = 'aDiag1';
+				for (i=0; i<aDiag1.length; i++) {
+					if (gameState[aDiag1[i]] !== player) {
+						win = false;
+						break;
+					}
+				}
+				if (!win) {
+					win = true;
+					winOn = 'aDiag2';
+					console.log('check diag 2');
+					for (i=0; i<aDiag2.length; i++) {
+						if (gameState[aDiag2[i]] !== player) {
+							win = false;
+							break;
+						}
+					}
+				}
+			}
+			if (win){
+				gameOver(winOn);
+			}
+		}
+		function gameOver(winOn) {
+			var sPosition;
+			var i = -1;
+			scores[player] ++;
+			$("#score" + player).html(scores[player]);
+			if (winOn === 'aDiag1') {
+				for (i=0; i<aDiag1.length; i++) {
+					sPosition = aDiag1[i];
+					$("button[data-position='" + sPosition + "']").addClass('game-win');
+				}
+			}
+			else if (winOn === 'aDiag2') {
+				for (i=0; i<aDiag2.length; i++) {
+					sPosition = aDiag2[i];
+					$("button[data-position='" + sPosition + "']").addClass('game-win');
+				}
+			}
+			else if (winOn.charAt(0) === 'r') {
+				for (i = 0; i < 3; i++) {
+					sPosition = winOn.charAt(1) + i;
+					$("button[data-position='" + sPosition + "']").addClass('game-win');
+				}
+			}
+			else if (winOn.charAt(0) === 'c') {
+				for (i = 0; i < 3; i++) {
+					sPosition = i + winOn.charAt(1);
+					$("button[data-position='" + sPosition + "']").addClass('game-win');
+				}
+			}
+			$(".game-board").addClass('game-win');
+			//alert('Game Over! Player ' + player + ' WINS on ' + winOn);
+		}
+
+
+	});
+</script>
+Scores:
+<div>X: <span id="scoreX">0</span></div>
+<div>O: <span id="scoreO">0</span></div>
+<div class="game-board">
+	<div class="game-row">
+		<button class="play-button" data-position="00"></button>
+		<button class="play-button" data-position="01"></button>
+		<button class="play-button" data-position="02"></button>
+	</div>
+	<div class="game-row">
+		<button class="play-button" data-position="10"></button>
+		<button class="play-button" data-position="11"></button>
+		<button class="play-button" data-position="12"></button>
+	</div>
+	<div class="game-row">
+		<button class="play-button" data-position="20"></button>
+		<button class="play-button" data-position="21"></button>
+		<button class="play-button" data-position="22"></button>
+	</div>
+</div>
+<br>
+<button id="newGame">New Game</button>
+<br>
+<button id="resetGame">Reset</button>
+</body>
+</html>
